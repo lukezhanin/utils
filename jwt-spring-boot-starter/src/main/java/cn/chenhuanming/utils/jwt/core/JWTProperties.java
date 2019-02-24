@@ -29,6 +29,12 @@ public class JWTProperties {
      * long expiration(minute).Client must be authorized when token is invalid within exp.
      */
     private long exp = 10080;
+    
+    /**
+     * leeway(second). Take a leeway to allow token issue time from multiple servers 
+     * to be slightly out of sync.
+     */
+    private long leeway = 120;
 
     /**
      * header name got by {@link TokenAuthorizationFilter} to get token
