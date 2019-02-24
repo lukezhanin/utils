@@ -28,25 +28,33 @@ import java.util.stream.Collectors;
 public class SimpleTokenUtils implements TokenUtils {
 
     //Secret
-    private final String SECRET;
+    private final String SECRET;        
 
     //long expiration of token
     private final long EXP;
 
     //short expiration of token
     private final long SHORT_EXP;
-
+    
+    //leeway
+    private final long leeway;
+    
     //加密算法
     private final Algorithm ALGORITHM;
 
     public SimpleTokenUtils(String SECRET, long VALIDATE_MINUTE, long SHORT_EXP) throws UnsupportedEncodingException {
         this(SECRET, VALIDATE_MINUTE, SHORT_EXP, Algorithm.HMAC256(SECRET));
     }
+    
+    public SimpleTokenUtils(String SECRET, long VALIDATE_MINUTE, long SHORT_EXP, long leeway) throws UnsupportedEncodingException {
+        this(SECRET, VALIDATE_MINUTE, SHORT_EXP, Algorithm.HMAC256(SECRET));
+    }
 
-    public SimpleTokenUtils(String SECRET, long VALIDATE_MINUTE, long SHORT_EXP, Algorithm ALGORITHM) {
+    public SimpleTokenUtils(String SECRET, long VALIDATE_MINUTE, long SHORT_EXP, long leeway, Algorithm ALGORITHM) {
         this.SECRET = SECRET;
         this.EXP = VALIDATE_MINUTE;
         this.SHORT_EXP = SHORT_EXP;
+        this.leeway = leeway;
         this.ALGORITHM = ALGORITHM;
     }
 
@@ -104,7 +112,7 @@ public class SimpleTokenUtils implements TokenUtils {
         if (token == null)
             return false;
         try {
-            JWT.require(ALGORITHM).build().verify(token);
+            JWT.require(ALGORITHM).acceptLeeway(leeway).build().verify(token);
             return true;
         } catch (JWTVerificationException e) {
             return false;
