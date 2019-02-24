@@ -36,7 +36,7 @@ public class JWTAutoConfiguration {
     @Bean
     TokenUtils tokenUtils(){
         try {
-            return new SimpleTokenUtils(jwtProperties.getSecret(),jwtProperties.getExp(),jwtProperties.getShortExp());
+            return new SimpleTokenUtils(jwtProperties.getSecret(),jwtProperties.getExp(),jwtProperties.getShortExp(), jwtProperties.getLeeway());
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
